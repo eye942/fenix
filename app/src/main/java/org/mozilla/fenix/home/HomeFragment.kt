@@ -7,6 +7,7 @@ package org.mozilla.fenix.home
 import android.animation.Animator
 import android.content.Context
 import android.content.DialogInterface
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -43,6 +44,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.browser_toolbar_popup_window.view.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.coroutines.CoroutineScope
@@ -67,12 +69,15 @@ import mozilla.components.feature.tab.collections.TabCollection
 import mozilla.components.feature.top.sites.TopSite
 import mozilla.components.lib.state.ext.consumeFrom
 import mozilla.components.lib.state.ext.flowScoped
+import mozilla.components.support.ktx.android.content.getColorFromAttr
 import mozilla.components.support.ktx.android.util.dpToPx
+import mozilla.components.support.ktx.kotlin.isUrl
 import mozilla.components.support.ktx.kotlinx.coroutines.flow.ifChanged
 import org.mozilla.fenix.BrowserDirection
 import org.mozilla.fenix.HomeActivity
 import org.mozilla.fenix.R
 import org.mozilla.fenix.browser.BrowserAnimator.Companion.getToolbarNavOptions
+import org.mozilla.fenix.browser.BrowserFragmentDirections
 import org.mozilla.fenix.browser.browsingmode.BrowsingMode
 import org.mozilla.fenix.components.FenixSnackbar
 import org.mozilla.fenix.components.PrivateShortcutCreateManager
@@ -345,6 +350,49 @@ class HomeFragment : Fragment() {
             hideOnboardingIfNeeded()
             navigateToSearch()
             requireComponents.analytics.metrics.track(Event.SearchBarTapped(Event.SearchBarTapped.Source.HOME))
+        }
+
+        //TODO: fix this
+        view.toolbar_wrapper.setOnLongClickListener {
+            val clipboard = view.context.components.clipboardHandler
+
+            val customView = LayoutInflater.from(view.context)
+                .inflate(R.layout.browser_toolbar_popup_window, null)
+            val popupWindow = PopupWindow(
+                customView,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                view.context.resources.getDimensionPixelSize(R.dimen.context_menu_height),
+                true
+            )
+
+            popupWindow.elevation =
+                view.context.resources.getDimension(R.dimen.mozac_browser_menu_elevation)
+
+            // This is a workaround for SDK<23 to allow popup dismissal on outside or back button press
+            // See: https://github.com/mozilla-mobile/fenix/issues/10027
+            popupWindow.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            customView.copy.isVisible = false
+            customView.paste.isVisible = !clipboard.text.isNullOrEmpty()
+            customView.paste_and_go.isVisible =
+                !clipboard.text.isNullOrEmpty()
+
+            customView.paste.setOnClickListener {
+                popupWindow.dismiss()
+                sessionControlInteractor.onBrowserToolbarPaste(clipboard.text!!)
+            }
+
+            customView.paste_and_go.setOnClickListener {
+                popupWindow.dismiss()
+                sessionControlInteractor.onBrowserToolbarPasteAndGo(clipboard.text!!)
+            }
+
+            popupWindow.showAsDropDown(
+                view.toolbar_wrapper,
+                view.context.resources.getDimensionPixelSize(R.dimen.context_menu_x_offset),
+                0,
+                Gravity.START
+            )
+            true
         }
 
         view.add_tab_button.setOnClickListener {
