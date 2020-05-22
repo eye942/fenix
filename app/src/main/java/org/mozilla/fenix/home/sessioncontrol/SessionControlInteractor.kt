@@ -9,6 +9,9 @@ import mozilla.components.feature.tab.collections.Tab
 import mozilla.components.feature.tab.collections.TabCollection
 import mozilla.components.feature.top.sites.TopSite
 import org.mozilla.fenix.components.tips.Tip
+import org.mozilla.fenix.components.toolbar.BrowserToolbarViewInteractor
+import org.mozilla.fenix.components.toolbar.PasteAndGoInteractor
+import org.mozilla.fenix.components.toolbar.ToolbarMenu
 
 /**
  * Interface for collection related actions in the [SessionControlInteractor].
@@ -213,7 +216,8 @@ interface TopSiteInteractor {
 @SuppressWarnings("TooManyFunctions")
 class SessionControlInteractor(
     private val controller: SessionControlController
-) : CollectionInteractor, OnboardingInteractor, TabSessionInteractor, TopSiteInteractor, TipInteractor {
+) : CollectionInteractor, OnboardingInteractor, TabSessionInteractor, TopSiteInteractor, TipInteractor,
+    PasteAndGoInteractor {
     override fun onCloseTab(sessionId: String) {
         controller.handleCloseTab(sessionId)
     }
@@ -313,4 +317,13 @@ class SessionControlInteractor(
     override fun onCloseTip(tip: Tip) {
         controller.handleCloseTip(tip)
     }
+
+    override fun onBrowserToolbarPaste(text: String) {
+        controller.handleToolbarPaste(text)
+    }
+
+    override fun onBrowserToolbarPasteAndGo(text: String) {
+        controller.handleToolbarPasteAndGo(text)
+    }
+
 }
