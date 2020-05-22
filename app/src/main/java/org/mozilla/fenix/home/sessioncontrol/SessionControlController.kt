@@ -17,7 +17,6 @@ import mozilla.components.feature.media.ext.playIfPaused
 import mozilla.components.feature.tab.collections.TabCollection
 import mozilla.components.feature.tab.collections.ext.restore
 import mozilla.components.feature.top.sites.TopSite
-import mozilla.components.support.utils.WebURLFinder
 import org.mozilla.fenix.BrowserDirection
 import org.mozilla.fenix.HomeActivity
 import org.mozilla.fenix.R
@@ -426,7 +425,7 @@ class DefaultSessionControlController(
         navController.nav(R.id.homeFragment, directions)
     }
 
-    override fun handleToolbarPaste(text:String){
+    override fun handleToolbarPaste(text: String) {
 //        activity.openToBrowser(BrowserDirection.FromHome)
 //        browserAnimator.captureEngineViewAndDrawStatically {
 //            val directions = BrowserFragmentDirections.actionBrowserFragmentToSearchFragment(
@@ -438,14 +437,12 @@ class DefaultSessionControlController(
 //        }
     }
 
-    override fun handleToolbarPasteAndGo(text: String){
+    override fun handleToolbarPasteAndGo(text: String) {
         activity.openToBrowserAndLoad(
             searchTermOrURL = text,
             newTab = true,
             from = BrowserDirection.FromHome
         )
-
-
     }
 
     companion object {

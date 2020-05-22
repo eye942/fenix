@@ -69,15 +69,12 @@ import mozilla.components.feature.tab.collections.TabCollection
 import mozilla.components.feature.top.sites.TopSite
 import mozilla.components.lib.state.ext.consumeFrom
 import mozilla.components.lib.state.ext.flowScoped
-import mozilla.components.support.ktx.android.content.getColorFromAttr
 import mozilla.components.support.ktx.android.util.dpToPx
-import mozilla.components.support.ktx.kotlin.isUrl
 import mozilla.components.support.ktx.kotlinx.coroutines.flow.ifChanged
 import org.mozilla.fenix.BrowserDirection
 import org.mozilla.fenix.HomeActivity
 import org.mozilla.fenix.R
 import org.mozilla.fenix.browser.BrowserAnimator.Companion.getToolbarNavOptions
-import org.mozilla.fenix.browser.BrowserFragmentDirections
 import org.mozilla.fenix.browser.browsingmode.BrowsingMode
 import org.mozilla.fenix.components.FenixSnackbar
 import org.mozilla.fenix.components.PrivateShortcutCreateManager
@@ -352,7 +349,6 @@ class HomeFragment : Fragment() {
             requireComponents.analytics.metrics.track(Event.SearchBarTapped(Event.SearchBarTapped.Source.HOME))
         }
 
-        //TODO: fix this
         view.toolbar_wrapper.setOnLongClickListener {
             val clipboard = view.context.components.clipboardHandler
 

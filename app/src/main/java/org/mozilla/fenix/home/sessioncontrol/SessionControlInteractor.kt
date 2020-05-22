@@ -9,9 +9,7 @@ import mozilla.components.feature.tab.collections.Tab
 import mozilla.components.feature.tab.collections.TabCollection
 import mozilla.components.feature.top.sites.TopSite
 import org.mozilla.fenix.components.tips.Tip
-import org.mozilla.fenix.components.toolbar.BrowserToolbarViewInteractor
 import org.mozilla.fenix.components.toolbar.PasteAndGoInteractor
-import org.mozilla.fenix.components.toolbar.ToolbarMenu
 
 /**
  * Interface for collection related actions in the [SessionControlInteractor].
@@ -325,5 +323,4 @@ class SessionControlInteractor(
     override fun onBrowserToolbarPasteAndGo(text: String) {
         controller.handleToolbarPasteAndGo(text)
     }
-
 }
