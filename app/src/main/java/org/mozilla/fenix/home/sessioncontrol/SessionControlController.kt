@@ -17,6 +17,7 @@ import mozilla.components.feature.media.ext.playIfPaused
 import mozilla.components.feature.tab.collections.TabCollection
 import mozilla.components.feature.tab.collections.ext.restore
 import mozilla.components.feature.top.sites.TopSite
+import mozilla.components.support.utils.WebURLFinder
 import org.mozilla.fenix.BrowserDirection
 import org.mozilla.fenix.HomeActivity
 import org.mozilla.fenix.R
@@ -166,6 +167,10 @@ interface SessionControlController {
     fun handleonOpenNewTabClicked()
 
     fun handleCloseTip(tip: Tip)
+
+    fun handleToolbarPaste(text: String)
+
+    fun handleToolbarPasteAndGo(text: String)
 }
 
 @SuppressWarnings("TooManyFunctions", "LargeClass")
@@ -419,6 +424,28 @@ class DefaultSessionControlController(
             data = data.toTypedArray()
         )
         navController.nav(R.id.homeFragment, directions)
+    }
+
+    override fun handleToolbarPaste(text:String){
+//        activity.openToBrowser(BrowserDirection.FromHome)
+//        browserAnimator.captureEngineViewAndDrawStatically {
+//            val directions = BrowserFragmentDirections.actionBrowserFragmentToSearchFragment(
+//                sessionId = currentSession?.id,
+//                pastedText = text
+//            )
+//
+//            navController.nav(R.id.browserFragment, directions, getToolbarNavOptions(activity))
+//        }
+    }
+
+    override fun handleToolbarPasteAndGo(text: String){
+        activity.openToBrowserAndLoad(
+            searchTermOrURL = text,
+            newTab = true,
+            from = BrowserDirection.FromHome
+        )
+
+
     }
 
     companion object {
